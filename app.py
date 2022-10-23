@@ -1,16 +1,15 @@
-from lxml import etree
+import os
+import random
 import requests
+from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-import os
-import random
-
-TOOLS_PATH = 'D:\\FILES\\Python Projects\\shared_tools'
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+from slugify import slugify
 
 class BandcampDownload:
 
@@ -51,22 +50,21 @@ class BandcampDownload:
         wait = WebDriverWait(_chrome_browser_handle, timeout=30)
         download_ready = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@class='item-button' and @href]")))
         download_url = download_ready.get_attribute("href")
-        return download_url
-
-    def save_to_file(self, data, filename, filepath=None):
-        if not filepath:
-            filepath = os.path.join(self.log_dir , filename)
-        with open(filepath, 'w+', encoding="utf-8") as file:
-            file.write(data)
-        file.close()
-        print(f'Wrote to file: {filepath}')
-        return True
+        show_name = _chrome_browser_handle.find_element(By.CLASS_NAME, "title").text
+        return (download_url, show_name)
 
     def download_show(self, show_link):
-        download_url = self._get_bc_show_dl_link(show_link=show_link)
+        download_url, show_name = self._get_bc_show_dl_link(show_link=show_link)
+        print(f'Show Name: {show_name}')
+        show_name_slug = slugify(show_name)
+        print(f'Show Name SLUG: {show_name_slug}')
+        print(f'Download URL: {download_url}')
         download_request = requests.get(download_url, allow_redirects=True)
-        open('show.zip', 'wb').write(download_request.content)
-        
+        file_path = os.path.join("D:\MUSIC\FLAC\STS9", f'{show_name_slug}.zip')
+        if open(file_path, 'wb').write(download_request.content):
+            print(f'Downloaded show to path: {file_path}')
+
+
 if __name__ == "__main__":
 
     bc_dl = BandcampDownload(bc_html="bandcamp_dump.html")
