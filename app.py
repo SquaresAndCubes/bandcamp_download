@@ -80,5 +80,4 @@ if __name__ == "__main__":
     bc_dl = BandcampDownload(bc_html="bandcamp_dump.html")
     print(f'Found {len(bc_dl.dl_links)} shows for download')
     for show_link in bc_dl.dl_links:
-        data = bc_dl.download_show(show_link=show_link)
-        #time.sleep(30)
+        bc_dl.download_show(show_link=show_link)
