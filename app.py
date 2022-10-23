@@ -68,6 +68,8 @@ class BandcampDownload:
         download_request = requests.get(download_url, allow_redirects=True)
         content_type = download_request.headers['content-type']
         file_extension = mimetypes.guess_extension(content_type)
+        if not file_extension:
+            file_extension = '.zip'
         file_path = os.path.join("F:\\", f'{show_slug + file_extension}')
         print(f'Download URL: {download_url}')
         if not os.path.isfile(file_path):
