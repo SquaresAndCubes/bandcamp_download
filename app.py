@@ -10,8 +10,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from slugify import slugify
-from datetime import datetime
 
 class BandcampDownload:
 
@@ -27,7 +25,8 @@ class BandcampDownload:
         webdriver_options = Options()
         webdriver_options.add_argument('--headless')
         webdriver_options.add_argument('--user-data-dir=C:\\Users\\btvaa\\AppData\\Local\\Google\\Chrome\\User Data')
-        webdriver_options.add_argument('profile-directory=Default')
+        webdriver_options.add_argument('--profile-directory=Default')
+        webdriver_options.add_argument('--log-level=3')
         return webdriver.Chrome(options=webdriver_options, service=Service(ChromeDriverManager().install()))
 
     def _get_chrome_browser_handle(self):
@@ -82,4 +81,4 @@ if __name__ == "__main__":
     print(f'Found {len(bc_dl.dl_links)} shows for download')
     for show_link in bc_dl.dl_links:
         data = bc_dl.download_show(show_link=show_link)
-        time.sleep(30)
+        #time.sleep(30)
