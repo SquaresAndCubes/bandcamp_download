@@ -2,6 +2,7 @@ import os
 import time
 import requests
 import json
+import mimetypes
 from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -64,14 +65,16 @@ class BandcampDownload:
         show_slug = show[2]
         print(f'Show Title: {show_title}')
         print(f'Show Name SLUG: {show_slug}')
-        file_path = os.path.join("F:\\", f'{show_slug}.zip')
+        download_request = requests.get(download_url, allow_redirects=True)
+        content_type = download_request.headers['content-type']
+        file_extension = mimetypes.guess_extension(content_type)
+        file_path = os.path.join("F:\\", f'{show_slug + file_extension}')
         print(f'Download URL: {download_url}')
         if not os.path.isfile(file_path):
-            download_request = requests.get(download_url, allow_redirects=True)
             if open(file_path, 'wb').write(download_request.content):
                 print(f'Downloaded show to path: {file_path}')
                 return True
-        print(f'Already downloaded - skipping...')
+        print(f'Filepath: {file_path} - Already downloaded - skipping...')
         return False
 
 
