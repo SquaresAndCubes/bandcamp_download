@@ -96,7 +96,7 @@ class BandcampDownload:
         _chrome_browser_handle.find_element(By.CSS_SELECTOR, 'button.show-more').click()
         actions_driver = ActionChains(_chrome_browser_handle)
         logging.info(f'Exposing all shows in user {self.bc_username}\'s collection. Please wait...')
-        for i in range(0, 1):
+        for i in range(0, 50):
             time.sleep(2)
             actions_driver.key_down(Keys.CONTROL).send_keys(Keys.END).perform()
         html_dump = _chrome_browser_handle.page_source
