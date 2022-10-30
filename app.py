@@ -30,8 +30,12 @@ class BandcampDownload:
         self.all_shows_final_download_info = []
         self.download_path = 'C:\\STS9'
         self.logging_verbose = False
+        self.webdriver_logging = 3
+        self.collection_html_dump = False
 
     def _init_logging(self, **kwargs):
+        self.logger = logging.getLogger(__name__)
+        self.logging_verbose = kwargs.get('logging_verbose', False)
         self.log_dir = kwargs.get('log_dir', os.path.join(os.getcwd(), "logs"))
         logging.basicConfig(\
             level = logging.INFO,\
@@ -43,19 +47,20 @@ class BandcampDownload:
         if not os.path.isdir(self.log_dir):
             os.mkdir(self.log_dir)
             logging.info(f'Log directory {self.log_dir} created ')
+        if self.logging_verbose:
+            self.collection_html_dump = True
+            self.webdriver_logging = 0
         return True
 
     def _get_timestamp(self):
         return datetime.now().strftime("%Y_%m_%d_%I_%M_%S")
 
     def _init_chrome_browser_handle(self):
-        webdriver_logging = 3
         webdriver_options = Options()
         webdriver_options.add_argument('--headless')
         webdriver_options.add_argument(f'--user-data-dir={self.chrome_user_data_dir}')
         webdriver_options.add_argument(f'--profile-directory={self.chrome_user_profile_dir}')
-        if self.logging_verbose: webdriver_logging = 0
-        webdriver_options.add_argument(f'--log-level={webdriver_logging}')
+        webdriver_options.add_argument(f'--log-level={self.webdriver_logging}')
         return webdriver.Chrome(options=webdriver_options, service=Service(ChromeDriverManager().install()))
 
     def _get_chrome_browser_handle(self):
@@ -96,7 +101,10 @@ class BandcampDownload:
             actions_driver.key_down(Keys.CONTROL).send_keys(Keys.END).perform()
         html_dump = _chrome_browser_handle.page_source
         timestamp = self._get_timestamp()
-        if self.logging_verbose: self._write_to_file(content=html_dump, filename=f'{self.log_dir}\expose_shows_{timestamp}.html')
+        if self.collection_html_dump:
+            collection_html_dump_filename = f'{self.log_dir}\expose_shows_{timestamp}.html'
+            logging.info(f'Dumping collection HTML to file {collection_html_dump_filename}')
+            self._write_to_file(content=html_dump, filename=collection_html_dump_filename)
         return True
 
     def _generate_download_urls(self):
@@ -140,20 +148,20 @@ class BandcampDownload:
         logging.info(f'---> From URL: {show["download_url"]}')
         file_path = os.path.join(self.download_path, f'{show["show_slug"]}.zip')
         if os.path.isfile(file_path):
-            logging.info(f'!! Filepath: {file_path} is already downloaded --> Skipping !!')
+            logging.info(f'---> !! Filepath: {file_path} is already downloaded --> Skipping !!')
             return False
         download_request = requests.get(show['download_url'], allow_redirects=True)
         if not download_request:
             logging.error('!! Could not download show !!')
             return False
         if open(file_path, 'wb').write(download_request.content):
-            logging.info(f'Downloaded show to path: {file_path}')
+            logging.info(f'---> Downloaded show to path: {file_path}')
             return True
         return False
 
     #Must run this first passing in desired target download directory and Chrome user data directory if necessary
     def init_bc_download(self, **kwargs):
-        self._init_logging()
+        self._init_logging(logging_verbose=kwargs.get('logging_verbose', False))
         logging.info('!! Welcome to Bandcamp Download !!')
         logging.info('Initializing. Please wait...')
         self.chrome_user_data_dir = kwargs.get('chrome_user_data_dir', f'{os.environ["USERPROFILE"]}\\AppData\\Local\\Google\\Chrome\\User Data')
