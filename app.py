@@ -33,7 +33,12 @@ class BandcampDownload:
 
     def _init_logging(self, **kwargs):
         self.log_dir = kwargs.get('log_dir', os.path.join(os.getcwd(), "logs"))
-        logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler(os.path.join(self.log_dir, f'bc_download_log_{self._get_timestamp()}.log')), logging.StreamHandler(sys.stdout)])
+        logging.basicConfig(\
+            level = logging.INFO,\
+            handlers = [\
+            logging.FileHandler(os.path.join(self.log_dir, f'bc_download_log_{self._get_timestamp()}.log')),\
+            logging.StreamHandler(sys.stdout)\
+            ])
         logging.info(f'Setting log directory at {self.log_dir}')
         if not os.path.isdir(self.log_dir):
             os.mkdir(self.log_dir)
