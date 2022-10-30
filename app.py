@@ -29,6 +29,7 @@ class BandcampDownload:
         self.show_download_urls = []
         self.all_shows_final_download_info = []
         self.download_path = 'C:\\STS9'
+        self.quantity = False
         self.logging_verbose = False
         self.webdriver_logging = 3
         self.collection_html_dump = False
@@ -95,7 +96,7 @@ class BandcampDownload:
         _chrome_browser_handle.get(collection_url)
         _chrome_browser_handle.find_element(By.CSS_SELECTOR, 'button.show-more').click()
         actions_driver = ActionChains(_chrome_browser_handle)
-        logging.info(f'Exposing all shows in user {self.bc_username}\'s collection. Please wait...')
+        logging.info(f'Finding all shows in user {self.bc_username}\'s collection. Please wait...')
         for i in range(0, 50):
             time.sleep(2)
             actions_driver.key_down(Keys.CONTROL).send_keys(Keys.END).perform()
@@ -113,6 +114,8 @@ class BandcampDownload:
         if self.quantity:
             logging.info(f'!! User has provided a show quantity. Limiting scope to {self.quantity} shows !!')
             self.show_download_elements = self.show_download_elements[0:self.quantity]
+        else: 
+            self.quantity = len(self.show_download_elements)
         for show in self.show_download_elements:
             show_url = show.get_attribute('href')
             self.show_download_urls.append(show_url)
@@ -202,5 +205,6 @@ class BandcampDownload:
 if __name__ == "__main__":
 
     bc_dl = BandcampDownload()
-    bc_dl.init_bc_download(logging_verbose=False, download_path='D:\\STS9', quantity=10)
+    bc_dl.init_bc_download(logging_verbose=False, download_path='D:\\STS9', quantity=1)
+    input(f'!! Press Enter to Download {bc_dl.quantity} Shows !!')
     bc_dl.download_shows()
