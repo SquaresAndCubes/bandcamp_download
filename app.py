@@ -144,6 +144,9 @@ class BandcampDownload:
         self.chrome_user_data_dir = kwargs.get('chrome_user_data_dir', f'{os.environ["USERPROFILE"]}\\AppData\\Local\\Google\\Chrome\\User Data')
         self.chrome_user_profile_dir = kwargs.get('chrome_user_profile_dir', 'Default')
         self.download_path = kwargs.get('download_path', 'C:\\STS9')
+        if not os.path.isdir(self.download_path):
+            os.mkdir(self.download_path)
+            print(f'Show download path {self.download_path} created')
         self.quantity = kwargs.get('quantity', False)
         self.logging = kwargs.get('logging', False)
         if not self._get_chrome_browser_handle(): return False
@@ -176,5 +179,5 @@ class BandcampDownload:
 if __name__ == "__main__":
 
     bc_dl = BandcampDownload()
-    bc_dl.init_bc_download(logging=False, download_path='D:\\STS9', quantity=False)
+    bc_dl.init_bc_download(logging=False, download_path='D:\\STS9', quantity=10)
     bc_dl.download_shows()
