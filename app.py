@@ -189,5 +189,5 @@ class BandcampDownload:
 if __name__ == "__main__":
 
     bc_dl = BandcampDownload()
-    bc_dl.init_bc_download(logging_verbose=True, download_path='D:\\STS9', quantity=10)
+    bc_dl.init_bc_download(logging_verbose=False, download_path='D:\\STS9', quantity=10)
     bc_dl.download_shows()
