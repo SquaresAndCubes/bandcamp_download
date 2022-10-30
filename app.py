@@ -3,8 +3,6 @@ import time
 from datetime import datetime
 import requests
 import json
-import mimetypes
-from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
