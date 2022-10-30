@@ -23,7 +23,7 @@ class BandcampDownload:
         self.chrome_browser_handle = None
         self.bc_username = None
         self.log_dir = os.path.join(os.getcwd(), "logs")
-        self.show_download_elements = None
+        self.show_download_elements = []
         self.show_download_urls = []
         self.all_shows_final_download_info = []
         self.download_path = 'C:\\STS9'
@@ -145,6 +145,9 @@ class BandcampDownload:
         if not os.path.isdir(self.download_path):
             os.mkdir(self.download_path)
             print(f'Show download path {self.download_path} created')
+        if not os.path.isdir(self.log_dir):
+            os.mkdir(self.log_dir)
+            print(f'Log directory {self.log_dir} created ')
         self.quantity = kwargs.get('quantity', False)
         self.logging = kwargs.get('logging', False)
         if not self._get_chrome_browser_handle(): return False
