@@ -5,6 +5,8 @@ import time
 from datetime import datetime
 import requests
 import json
+import argparse
+import pathlib
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -204,7 +206,12 @@ class BandcampDownload:
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--download_path', type=pathlib.PureWindowsPath, default='C:\STS9', help='provide download path for show music files')
+    parser.add_argument('-q', '--quantity', type=int, default=1, help='provide quantity of shows to download')
+    parser.add_argument('-v', '--logging_verbose', default=False, action='store_true', help='increase logging verbosity')
+    args = parser.parse_args()
     bc_dl = BandcampDownload()
-    bc_dl.init_bc_download(logging_verbose=False, download_path='D:\\STS9', quantity=1)
+    bc_dl.init_bc_download(logging_verbose=args.logging_verbose, download_path=args.download_path, quantity=args.quantity)
     input(f'!! Press Enter to Download {bc_dl.quantity} Shows !!')
     bc_dl.download_shows()
