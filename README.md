@@ -35,7 +35,7 @@ https://github.com/SquaresAndCubes/bandcamp_download/archive/refs/heads/master.z
 
 - Issue the command as below and you will see Python packages install --> wait for complete
 
-C:\Users\some_user\Downloads\bandcamp_download-master> python -m pip install requirements.txt
+C:\Users\some_user\Downloads\bandcamp_download-master> python -m pip install -r requirements.txt
 
 ## 4. Now you are ready to run the app!
 
